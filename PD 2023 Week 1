@@ -1,0 +1,56 @@
+-- Preppin Data 2023 Week 1
+
+-- Split the Transaction Code to extract the letters at the start of the transaction code. These identify the bank who processes the transaction
+    -- Rename the new field with the Bank code 'Bank'.
+-- Rename the values in the Online or In-person field, Online of the 1 values and In-Person for the 2 values. 
+-- Change the date to be the day of the week
+
+-- Different levels of detail are required in the outputs. You will need to sum up the values of the transactions in three ways
+    -- 1. Total Values of Transactions by each bank
+    -- 2. Total Values by Bank, Day of the Week and Type of Transaction (Online or In-Person)
+    -- 3. Total Values by Bank and Customer Code
+
+--Full table
+SELECT *
+FROM TIL_PLAYGROUND.PREPPIN_DATA_INPUTS.PD2023_WK01
+LIMIT 100;
+
+--Base changes
+Select
+split_part(TRANSACTION_CODE, '-', 1) as Bank,
+CASE
+    WHEN ONLINE_OR_IN_PERSON = 1 then 'Online'
+    WHEN ONLINE_OR_IN_PERSON = 2 then 'In-Person'
+    ELSE 'Other'
+    END AS RESULT,
+dayname(date(left(transaction_date,10),'DD/MM/YYYY')) as Day
+from TIL_PLAYGROUND.PREPPIN_DATA_INPUTS.PD2023_WK01;
+
+--Output 1 
+Select
+split_part(TRANSACTION_CODE, '-', 1) as Bank,
+sum(VALUE) as value,
+FROM TIL_PLAYGROUND.PREPPIN_DATA_INPUTS.PD2023_WK01,
+GROUP BY Bank;
+
+--Output 2
+Select
+split_part(TRANSACTION_CODE, '-', 1) as Bank,
+CASE
+    WHEN ONLINE_OR_IN_PERSON = 1 then 'Online'
+    WHEN ONLINE_OR_IN_PERSON = 2 then 'In-Person'
+    ELSE 'Other'
+    END AS RESULT,
+dayname(date(left(transaction_date,10),'DD/MM/YYYY')) as Day,
+sum(VALUE) as Value
+from TIL_PLAYGROUND.PREPPIN_DATA_INPUTS.PD2023_WK01
+GROUP BY Bank, Result, Day
+ORDER BY VALUE Asc;
+
+--Output 3
+SELECT
+split_part(TRANSACTION_CODE, '-', 1) as Bank,
+CUSTOMER_CODE as Customer_Code,
+SUM(VALUE) as Value,
+FROM  TIL_PLAYGROUND.PREPPIN_DATA_INPUTS.PD2023_WK01
+GROUP BY Bank, Customer_Code;
