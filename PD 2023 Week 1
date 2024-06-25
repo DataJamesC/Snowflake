@@ -1,4 +1,4 @@
--- Preppin Data 2023 Week 1
+-- Preppin Data 2023 Week 1:
 
 -- Split the Transaction Code to extract the letters at the start of the transaction code. These identify the bank who processes the transaction
     -- Rename the new field with the Bank code 'Bank'.
