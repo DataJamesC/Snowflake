@@ -1,4 +1,4 @@
--- This script creates a full schema with 7 tables for different lego attributes with primary and foreign keys
+-- This script follows the process of creating a full schema with 7 tables for different lego attributes with primary and foreign keys
 
 -- Create SCHEMA in TIL_PORTFOLIO_PROJECTS database
 CREATE SCHEMA TIL_PORTFOLIO_PROJECTS.JAMES_C;
