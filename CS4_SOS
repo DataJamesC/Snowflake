@@ -1,0 +1,36 @@
+-- Initial Tables
+select *
+from TIL_PLAYGROUND.CS4_DATA_BANK.CUSTOMER_NODES
+limit 100;
+
+select *
+from TIL_PLAYGROUND.CS4_DATA_BANK.CUSTOMER_TRANSACTIONS
+limit 100;
+
+select * from TIL_PLAYGROUND.CS4_DATA_BANK.REGIONS;
+
+-- Customer Nodes Exploration
+-- Question 1:
+-- How many Unique Nodes are there on the Data Bank System?
+select COUNT(DISTINCT(REGION_ID)) AS No_Of_Nodes
+FROM TIL_PLAYGROUND.CS4_DATA_BANK.CUSTOMER_NODES;
+
+-- Question 2: What is the Number of Nodes per Region? 
+select
+R.REGION_NAME as REGIONS,
+COUNT(DISTINCT(NODE_ID)) as NODES
+from CUSTOMER_NODES as N
+inner join REGIONS as R
+ON N.REGION_ID = R.REGION_ID
+GROUP BY R.REGION_NAME
+limit 100;
+
+-- Question 3: How many customers are allocated to each region?
+select
+R.REGION_NAME,
+COUNT(CUSTOMER_ID) as TOTAL_CUSTOMERS,
+COUNT(DISTINCT(CUSTOMER_ID)) as UNIQUE_CUSTOMERS
+FROM CUSTOMER_NODES as N
+inner join REGIONS as R
+ON N.REGION_ID = R.REGION_ID
+GROUP BY REGION_NAME;
