@@ -1,0 +1,33 @@
+-- We want to create a final table for analysis at the level of granularity of one row per Set, with columns for its Year, number of unique parts in the set, total parts, and 'uniqueness'
+
+-- Find the Count of Unique Parts of LEGO (found in exactly one set)
+-- Do this by joining the parts table to the set table via the inventory table and storing in a CTE
+-- We can then use this CTE to have a qualifying column for unique parts in our overall table
+
+-- This CTE joins the parts table to the set table via the inventory table
+with Unique_Added AS (
+
+
+--This CTE creates a table of unique LEGO parts to be used in another CTE
+with UNIQUE_PARTS AS (
+    select P.PART_NUM
+    from LEGO_PARTS as P
+    inner join LEGO_INVENTORY_PARTS as IP on P.PART_NUM = IP.PART_NUM
+    inner join LEGO_INVENTORIES as I on IP.INVENTORY_ID = I.ID
+    inner join LEGO_SETS as S on I.SET_NUM = S.SET_NUM
+    GROUP BY P.PART_NUM
+    HAVING COUNT(P.PART_NUM) = 1
+)
+
+select
+UNIQUE_PARTS.PART_NUM,
+S.SET_NUM,
+S.YEAR as "YEAR",
+THEME_ID,
+NUM_PARTS
+from LEGO_PARTS as P
+inner join LEGO_INVENTORY_PARTS as IP on P.PART_NUM = IP.PART_NUM
+inner join LEGO_INVENTORIES as I on IP.INVENTORY_ID = I.ID
+inner join LEGO_SETS as S on I.SET_NUM = S.SET_NUM
+left join UNIQUE_PARTS on UNIQUE_PARTS.PART_NUM = P.PART_NUM
+where UNIQUE_PARTS.PART_NUM IS NOT NULL
